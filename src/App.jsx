@@ -51,7 +51,7 @@ const App = () => {
     <div className="App">
       {loading.loading && <Loader>Loading model... {(loading.progress * 100).toFixed(2)}%</Loader>}
       <div className="header">
-        <h1>📟 Makers - Real-Time YOLOv8 Instance Segmentation</h1>
+        <h2 style={{fontSize: "24px"}}>📟 Makers - Real-Time YOLOv8 Instance Segmentation</h2>
         <p style={{ fontWeight: "bold"}}>
           YOLOv8-Seg in TensorFlow.js — COCO-80 Classes        </p>
         <p>
