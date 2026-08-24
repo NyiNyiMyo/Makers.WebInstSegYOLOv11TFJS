@@ -68,6 +68,8 @@ const App = () => {
         <video
           autoPlay
           muted
+          playsInline
+          webkit-playsinline="true"
           ref={cameraRef}
           onPlay={() => detectVideo(cameraRef.current, model, canvasRef.current)}
         />
