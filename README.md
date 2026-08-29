@@ -1,2 +1,2 @@
-# Makers.WebInstSegYOLOv8TFJS
-YOLOv8 TFJS instance segmentation inference in browser
+# Makers.WebInstSegYOLOv11TFJS
+YOLOv11 TFJS instance segmentation inference in browser
