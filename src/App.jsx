@@ -19,11 +19,11 @@ const App = () => {
   const canvasRef = useRef(null);
 
   // model configs
-  const modelName = "yolov8n-seg";
+  const modelName = "yolo11n-seg";
 
   useEffect(() => {
     tf.ready().then(async () => {
-      const yolov8 = await tf.loadGraphModel(
+      const yolov11 = await tf.loadGraphModel(
         `${window.location.href}/${modelName}_web_model/model.json`,
         {
           onProgress: (fractions) => {
@@ -33,13 +33,13 @@ const App = () => {
       ); // load model
 
       // warming up model
-      const dummyInput = tf.randomUniform(yolov8.inputs[0].shape, 0, 1, "float32"); // random input
-      const warmupResults = yolov8.execute(dummyInput);
+      const dummyInput = tf.randomUniform(yolov11.inputs[0].shape, 0, 1, "float32"); // random input
+      const warmupResults = yolov11.execute(dummyInput);
 
       setLoading({ loading: false, progress: 1 });
       setModel({
-        net: yolov8,
-        inputShape: yolov8.inputs[0].shape,
+        net: yolov11,
+        inputShape: yolov11.inputs[0].shape,
         outputShape: warmupResults.map((e) => e.shape),
       }); // set model & input shape
 
@@ -51,9 +51,9 @@ const App = () => {
     <div className="App">
       {loading.loading && <Loader>Loading model... {(loading.progress * 100).toFixed(2)}%</Loader>}
       <div className="header">
-        <h2 style={{fontSize: "24px"}}>📟 Makers - Real-Time YOLOv8 Instance Segmentation</h2>
+        <h2 style={{fontSize: "24px"}}>📟 Makers - Real-Time YOLOv11 Instance Segmentation</h2>
         <p style={{ fontWeight: "bold"}}>
-          YOLOv8-Seg in TensorFlow.js — COCO-80 Classes        </p>
+          YOLOv11-Seg in TensorFlow.js — COCO-80 Classes        </p>
         <p>
           Serving Model : <code className="code">{modelName}</code>
         </p>
