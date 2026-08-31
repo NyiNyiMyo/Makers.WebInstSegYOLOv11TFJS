@@ -3,7 +3,7 @@ import * as tf from "@tensorflow/tfjs";
 import "@tensorflow/tfjs-backend-webgl"; // set backend to webgl
 import Loader from "./components/loader";
 import ButtonHandler from "./components/btn-handler";
-import { detectFrame, detectVideo } from "./utils/detect";
+import { detectFrame, detectVideo, detectVideocam } from "./utils/detect";
 import "./style/App.css";
 
 const App = () => {
@@ -16,6 +16,7 @@ const App = () => {
   // references
   const imageRef = useRef(null);
   const cameraRef = useRef(null);
+  const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
   // model configs
@@ -71,12 +72,20 @@ const App = () => {
           playsInline
           webkit-playsinline="true"
           ref={cameraRef}
-          onPlay={() => detectVideo(cameraRef.current, model, canvasRef.current)}
+          onPlay={() => detectVideocam(cameraRef.current, model, canvasRef.current)}
+        />
+        <video
+          autoPlay
+          muted
+          playsInline
+          webkit-playsinline="true"
+          ref={videoRef}
+          onPlay={() => detectVideo(videoRef.current, model, canvasRef.current)}
         />
         <canvas width={model.inputShape[2]} height={model.inputShape[1]} ref={canvasRef} />
       </div>
 
-      <ButtonHandler imageRef={imageRef} cameraRef={cameraRef} />
+      <ButtonHandler imageRef={imageRef} cameraRef={cameraRef} videoRef={videoRef} />
     </div>
   );
 };

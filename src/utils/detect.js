@@ -189,7 +189,7 @@ export const detectFrame = async (source, model, canvasRef, callback = () => {})
  * @param {tf.GraphModel} model loaded YOLOv8 tensorflow.js model
  * @param {HTMLCanvasElement} canvasRef canvas reference
  */
-export const detectVideo = (vidSource, model, canvasRef) => {
+export const detectVideocam = (vidSource, model, canvasRef) => {
   /**
    * Function to detect every frame from video
    */
@@ -206,4 +206,57 @@ export const detectVideo = (vidSource, model, canvasRef) => {
   };
 
   detect(); // initialize to detect every frame
+};
+export const detectVideo = async (vidSource, model, canvasRef) => {
+  const fps = 15; // set fps to 15 to reduce lag and increase performance
+  const frameDuration = 1 / fps;
+
+  const waitForSeeked = () =>
+    new Promise((resolve) => {
+      const handler = () => {
+        vidSource.removeEventListener("seeked", handler);
+        resolve();
+      };
+
+      vidSource.addEventListener("seeked", handler);
+    });
+
+  const detect = async () => {
+    if (
+      vidSource.videoWidth === 0 ||
+      vidSource.videoHeight === 0 ||
+      vidSource.ended
+    ) {
+      return;
+    }
+
+    // Freeze video on the current frame
+    vidSource.pause();
+
+    // Process this exact frame
+    await detectFrame(vidSource, model, canvasRef);
+
+    // Move exactly one frame forward
+    const nextTime = vidSource.currentTime + frameDuration;
+
+    if (nextTime >= vidSource.duration) {
+      return;
+    }
+
+    vidSource.currentTime = nextTime;
+
+    // Wait until the new frame is ready
+    await waitForSeeked();
+
+    // Immediately process next frame
+    detect();
+  };
+
+  // Start from beginning
+  vidSource.pause();
+  vidSource.currentTime = 0;
+
+  await waitForSeeked();
+
+  detect();
 };
